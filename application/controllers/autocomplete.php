@@ -131,7 +131,7 @@ class Autocomplete extends CI_Controller {
         $id_kemasan = $_GET['id_kemasan']; // kemasan
         $id_barang  = $_GET['id_barang']; // id barang
         $jml= $_GET['jumlah'];
-        $data = $this->m_autocomplete->get_detail_harga_barang_penerimaan($id_kemasan, $id_barang, $jml)->result();
+        $data = $this->m_autocomplete->get_detail_harga_barang_penerimaan($id_kemasan, $id_barang, $jml);
         die(json_encode($data));
     }
     

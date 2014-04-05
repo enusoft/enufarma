@@ -5869,7 +5869,7 @@ class M_inventory extends CI_Model {
                 faktur = '$faktur',
                 tanggal = '$tanggal',
                 id_supplier = '$supplier',
-                id_pemesanan = '$no_sp',
+                id_pemesanan = $no_sp,
                 ppn = '$ppn',
                 materai = '$materai',
                 jatuh_tempo = '$tempo',
