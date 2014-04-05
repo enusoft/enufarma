@@ -622,7 +622,7 @@ function load_list_data(id_barang, nama_barang, id_satuan_beli, jumlah, hna, isi
         $('#satuan'+no).val(id_satuan_beli);
     });
     $('#barang,#id_barang,#jumlah,#hna,#isi,#isi_satuan').val('');
-    $('#kemasan').html(''); $('#faktur').focus().select();
+    $('#kemasan').html(''); $('#barang').focus().select();
 }
 
 function hitung_sub_total(i) {

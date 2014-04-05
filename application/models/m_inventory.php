@@ -5689,6 +5689,10 @@ class M_inventory extends CI_Model {
             
             $this->db->query($sql);
             $id = $this->db->insert_id();
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
+                $result['status'] = FALSE;
+            }
             jurnal_debet('1.1.6.1.2', 'Penerimaan', $total, $id);
             jurnal_kredit('2.1.1.1', 'Penerimaan', $total, $id);
             
