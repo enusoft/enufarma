@@ -1,4 +1,5 @@
 <link media="print" rel="stylesheet" href="<?= base_url('assets/css/print-A4-landscape.css') ?>" />
+<title>REKAP PENERIMAAN</title>
 <script type="text/javascript">
 function cetak() {
     window.print();

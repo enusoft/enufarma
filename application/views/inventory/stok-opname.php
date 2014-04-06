@@ -197,7 +197,7 @@ function form_add() {
                     return false;
                 }
                 if ($('#masuk'+i).val() === '' || $('#keluar'+i).val() === '') {
-                    alert_empty('masuk & keluar','#masuk'+i);
+                    alert_empty('masuk atau keluar','#masuk'+i);
                     return false;
                 }
             }

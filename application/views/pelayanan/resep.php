@@ -615,6 +615,9 @@ function form_receipt() {
         if ($('.tr_rows').length === 0) {
             alert_dinamic('Barang belum ada yang dipilih !','#barang'); return false;
         }
+        if ($('#tunai').val() === '') {
+            alert_empty('uang yang diserahkan','#tunai'); return false;
+        }
         $.ajax({
             type: 'POST',
             url: '<?= base_url('pelayanan/manage_resep/save') ?>',

@@ -98,7 +98,8 @@ function hitung_detail_total(jml, jum, diskon_rupiah, diskon_persen, harga_jual,
     }
     $('#hargajual'+jml).html(numberToCurrency(harga_jual*isi_satuan));
     $('#harga_jual'+jml).val(parseInt(harga_jual*isi_satuan));
-    //$('#diskon_rupiah'+jml).val(numberToCurrency(parseInt(dr)));
+    
+    //$('#diskon_rupiah'+jml).val(dr);
     //$('#diskon_persen'+jml).val(dp);
     var subtotal = (jum*harga_jual*isi_satuan);
     $('#subtotal'+jml).html(numberToCurrency(parseInt(subtotal)));
@@ -192,32 +193,31 @@ function removeMe(el) {
     });
 }
 
-function add_new_rows(id_brg, nama_brg, jumlah, id_packing) {
+function add_new_rows(data, jumlah) {
     var jml = $('.tr_rows').length+1;
     
     var str = '<tr class="tr_rows">'+
                 '<td align=center>'+jml+'</td>'+
-                '<td>&nbsp;'+nama_brg+' <input type=hidden name=id_barang[] value="'+id_brg+'" class=id_barang id=id_barang'+jml+' /></td>'+
+                '<td>&nbsp;'+data.nama+' <input type=hidden name=id_barang[] value="'+data.id+'" class=id_barang id=id_barang'+jml+' /></td>'+
                 '<td><input type=text name=jumlah[] id=jumlah'+jml+' value="'+jumlah+'" class=jumlah style="text-align: center;" /></td>'+
                 '<td><select name=kemasan[] class=kemasan id=kemasan'+jml+'></select><input type=hidden name=harga_jual[] id=harga_jual'+jml+' class=harga_jual /> <input type=hidden name=isi_satuan[] id=isi_satuan'+jml+' /> </td>'+
                 '<td align=center><select name=ed[] class=ed id=ed'+jml+'></select></td>'+
                 '<td align=center id=sisa'+jml+'></td>'+
                 '<td align=right id=hargajual'+jml+'></td>'+
-                '<td><input type=text name=diskon_rupiah[] class=diskon_rupiah style="text-align: right;" id=diskon_rupiah'+jml+' value="0" onblur="FormNum(this)" /></td>'+
-                '<td><input type=text name=diskon_persen[] class=diskon_persen style="text-align: center;" id=diskon_persen'+jml+' value="0" /></td>'+
+                '<td><input type=text name=diskon_rupiah[] class=diskon_rupiah style="text-align: right;" id=diskon_rupiah'+jml+' value="'+((data.diskon_rupiah !== undefined)?data.diskon_rupiah:'0')+'" onblur="FormNum(this)" /></td>'+
+                '<td><input type=text name=diskon_persen[] class=diskon_persen style="text-align: center;" id=diskon_persen'+jml+' value="'+((data.diskon_persen !== undefined)?data.diskon_persen:'0')+'" /></td>'+
                 '<td align=right id=subtotal'+jml+'></td>'+
                 '<td align=center><img onclick=removeMe(this); title="Klik untuk hapus" src="<?= base_url('assets/images/delete.png') ?>" class=add_kemasan align=left /></td>'+
               '</tr>';
     $('#pesanan-list tbody').append(str);
-    check_alergi_obat_pasien(jml, $('#id_customer').val(), id_brg);
-    $.getJSON('<?= base_url('autocomplete/get_data_kemasan')?>/'+id_brg, function(data){
+    $.getJSON('<?= base_url('autocomplete/get_data_kemasan')?>/'+data.id, function(data){
         $('#kemasan'+jml).html('');
         $.each(data, function (i, value) {
             $('#kemasan'+jml).append("<option value='"+value.id+"'>"+value.kemasan+"</option>");
             if (value.default_kemasan === '1') { $('#kemasan'+jml).val(value.id); }
         });
     });
-    $.getJSON('<?= base_url('autocomplete/get_expiry_barang')?>?id='+id_brg, function(data){
+    $.getJSON('<?= base_url('autocomplete/get_expiry_barang')?>?id='+data.id, function(data){
         $('#ed'+jml).html('');
         var jmled = 0;
         $.each(data, function (index, value) {
@@ -228,15 +228,9 @@ function add_new_rows(id_brg, nama_brg, jumlah, id_packing) {
             $('#ed'+jml).append("<option value=''></option>");
         }
     });
-    $.ajax({
-        url: '<?= base_url('autocomplete/get_detail_harga_barang_resep')?>?id='+id_brg+'&jumlah='+jumlah,
-        dataType: 'json',
-        cache: false,
-        success: function(data) {
-            hitung_detail_total(jml, jumlah, data.diskon_rupiah, data.diskon_persen, Math.ceil(data.harga_jual_nr), data.isi_satuan);
-            $('#isi_satuan'+jml).val(data.isi_satuan);
-        }
-    });
+    hitung_detail_total(jml, jumlah, data.diskon_rupiah, data.diskon_persen, Math.ceil(data.harga_jual_nr), data.isi_satuan);
+    $('#isi_satuan'+jml).val(data.isi_satuan);
+
     $('#ed'+jml).datepicker({
         changeYear: true,
         changeMonth: true,
@@ -316,7 +310,7 @@ function add_new_rows(id_brg, nama_brg, jumlah, id_packing) {
         });
     });
     $.ajax({
-        url: '<?= base_url('autocomplete/get_stok_sisa')?>/'+id_brg,
+        url: '<?= base_url('autocomplete/get_stok_sisa')?>/'+data.id,
         dataType: 'json',
         cache: false,
         success: function(data) {
@@ -397,8 +391,9 @@ function form_pembayaran() {
             closeOnEscape: false,
             buttons: {
                 "Simpan": function() {
+                    //$('#save_penjualannr').unbind('submit');
                     $('#save_penjualannr').submit();
-                    $('#form-pembayaran').dialog('close').remove();
+                    $('#form-pembayaran').dialog().remove();
                 }
             },
             open: function() {
@@ -476,7 +471,6 @@ function form_add_penjualan_non_resep() {
     $('#pilih').keydown(function(e) {
         if (e.keyCode === 13) {
             var id_barang   = $('#id_barang').val();
-            var nama        = $('#barang').val();
             var jumlah      = $('#pilih').val();
             if (id_barang !== '') {
                 $.ajax({
@@ -484,7 +478,7 @@ function form_add_penjualan_non_resep() {
                     dataType: 'json',
                     cache: false,
                     success: function(data) {
-                        add_new_rows(id_barang, nama, jumlah ,data.id_packing);
+                        add_new_rows(data, jumlah);
                     }
                 });
             }
@@ -614,7 +608,7 @@ function form_add_penjualan_non_resep() {
                 form_pembayaran();
             }, 
             "Cancel": function() {    
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
                 $.cookie('session', 'false');
             }
         }, close: function() {
@@ -630,9 +624,8 @@ function form_add_penjualan_non_resep() {
         changeYear: true,
         changeMonth: true
     });
-    $('#save_penjualannr').submit(function() {
+    $('#save_penjualannr').submit(function(event) {
         var jumlah = $('.tr_rows').length;
-        
         if (jumlah === 0) {
             alert_empty('Barang', '#barang');
             return false;
@@ -654,26 +647,30 @@ function form_add_penjualan_non_resep() {
                         $('#total_penjualan, #customer, #id_customer, #pilih').val('');
                         $('#ppn, #tuslah, #embalage').val('0');
                         $('#total-penjualan').html('0');
-                        $('#form-pembayaran').dialog('close').remove();
+                        $('#form-pembayaran').dialog().remove();
                         $('#barang').focus();
                         $.cookie('session', 'true');
                         $.cookie('formbayar', 'false');
                         alert_refresh('Transaksi penjualan berhasil disimpan');
                         cetak_struk(data.id);
-                        $('#form_penjualannr').dialog('close').remove();
+                        $('#form_penjualannr').dialog().remove();
+                        
                     } else {
                         $.cookie('session', 'true');
                         $.cookie('formbayar', 'false');
+                        cetak_struk(data.id);
                         alert_refresh('Transaksi penjualan berhasil diupdate');
                     }
                 }
             }
             
         });
-        return false;
+        event.stopPropagation();
+        event.preventDefault();
     });
 }
 $(function() {
+    $('body').unbind('submit');
     $('#button-penjualan-nr').button({
         icons: {
             secondary: 'ui-icon-newwin'
@@ -719,11 +716,11 @@ function edit_penjualan_nr(str) {
     $('#customer').val(arr[3]);
     $('#id_customer').val(arr[2]);
     $('#total-penjualan').html(numberToCurrency(arr[9]));
-    $.getJSON('models/autocomplete.php?method=get_data_penjualan&id='+arr[0], function(data){
+    $.getJSON('<?= base_url('pelayanan/manage_penjualan_non_resep/get_data_penjualan_non_resep') ?>?id='+arr[0], function(data){
         $.each(data, function (index, value) {
-            add_new_rows(value.id_barang, value.nama_barang, value.qty, value.id_kemasan);
-            $('#diskon_rupiah'+(index+1)).val(value.disc_rp);
-            $('#diskon_persen'+(index+1)).val(value.disc_pr);
+            add_new_rows(value, value.qty);
+            $('#diskon_rupiah'+(index+1)).val(value.diskon_rupiah);
+            $('#diskon_persen'+(index+1)).val(value.diskon_persen);
         });
     });
 }

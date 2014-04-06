@@ -12,7 +12,7 @@
 <tbody>
     <?php
     foreach ($list_data as $key => $data) { 
-        $rows = $this->m_inventory->get_distributor_by_barang($data->id_barang);
+        $rows = $this->m_inventory->get_distributor_by_barang($data->id_barang)->row();
         ?>
     <tr class="<?= ($key%2==0)?'even':'odd' ?>">
         <td align="center"><?= ($auto++) ?></td>

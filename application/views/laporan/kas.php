@@ -1,8 +1,10 @@
 <?php $this->load->view('message') ?>
 <title><?= $title ?></title>
+<div class="titling"><h1><?= $title ?></h1></div>
 <div class="kegiatan">
     <script type="text/javascript">
         $(function() {
+            $('#tabs').tabs();
             $('button[id=reset]').button({
                 icons: {
                     secondary: 'ui-icon-refresh'
@@ -29,11 +31,11 @@
                 var jenis = $('#jenis').val();
                 var nama = $('#nama').val();
                 location.href='<?= base_url('laporan/kas_load_data') ?>?awal='+awal+'&akhir='+akhir+'&jenis='+jenis+'&nama='+nama+'&do=cetak';
-            })
+            });
             $('#awal,#akhir').datepicker({
                 changeYear: true,
                 changeMonth: true
-            })
+            });
             $('#jenis').focus();
             $('#search').click(function() {
                 var awal = $('#awal').val();
@@ -48,8 +50,8 @@
                         $('#result').html(data);
                         $('#cetak').fadeIn();
                     }
-                })
-            })
+                });
+            });
             $('input[name=pegawai]').autocomplete("<?= base_url('common/autocomplete?opsi=pegawai') ?>",
             {
                 parse: function(data){
@@ -79,46 +81,46 @@
             });
         })
     </script>
-    <div class="titling"><h1><?= $title ?></h1></div>
-    <div class="data-input">
-        <table width="100%" class="inputan">Parameter Pencarian</legend>
-            <tr><td>Tanggal</td><td><?= form_input('awal', date("d/m/Y"), 'id=awal size=10') ?> <span class="label">s . d </span><?= form_input('akhir', date("d/m/Y"), 'id=akhir size=10') ?>
-            <tr><td>Jenis Transaksi</td><td><?= form_dropdown('jenis', $jenis_transaksi, null, 'id=jenis') ?>
-            <tr><td>Nama Transaksi</td><td><?= form_input('nama', isset($_GET['awal']) ? $_GET['nama'] : null, 'size=30 id=nama') ?>
-            <tr><td></td><td><?= form_button(null, 'Cari', 'id=search') ?> 
-            <?= form_button('Reset', 'Reset', 'id=reset') ?> 
-            <?= form_button(null, 'Cetak Excel', 'id=cetak') ?> 
+    <div id="tabs">
+        <ul>
+            <li><a href="#tabs-1">Parameter</a></li>
+        </ul>
+        <div id="tabs-1">
+            <table width="100%" class="inputan">
+                <tr><td>Tanggal</td><td><?= form_input('awal', date("d/m/Y"), 'id=awal size=10') ?> <span class="label">s . d </span><?= form_input('akhir', date("d/m/Y"), 'id=akhir size=10') ?>
+                <tr><td>Jenis Transaksi</td><td><?= form_dropdown('jenis', $jenis_transaksi, null, 'id=jenis') ?>
+                <tr><td></td><td><?= form_button(null, 'Cari', 'id=search') ?> 
+                <?= form_button('Reset', 'Reset', 'id=reset') ?> 
+                <?= form_button(null, 'Cetak Excel', 'id=cetak') ?> 
             </table>
-        </table>
-    </div>
-    <div id="result" class="data-list">
-        <table class="tabel" width="100%">
-            <tr>
-                <th>Waktu</th>
-                <th>ID Transaksi</th>
-                <th>Jenis Transaksi</th>
-                <th>Nama</th>
-                <th>Awal</th>
-                <th>Penerimaan</th>
-                <th>Pengeluaran</th>
-                <th>Akhir</th>
-            </tr>
-            <?php for ($i = 1; $i <= 2; $i++) { ?>
-                <tr class="<?= ($i % 2 == 0) ? 'even' : 'odd' ?>">
-                    <td align="center">&nbsp;</td>
-                    <td></td>
-                    <td></td>
-                    <td align="right"></td>
-                    <td align="right"></td>
-                    <td align="right"></td>
-                    <td align="right"></td>
-                    <td align="right"></td>
+            <div id="result">
+            <table class="list-data" width="100%">
+                <tr>
+                    <th>No.</th>
+                    <th>Waktu</th>
+                    <th>ID</th>
+                    <th>Jenis Transaksi</th>
+                    <th>Penerimaan</th>
+                    <th>Pengeluaran</th>
+                    <th>Akhir</th>
                 </tr>
-            <?php }
-            ?>
-        </table>
-    </div><br/>
-    <!--<?= link_href('inventory/inkaso/', '<u>Inkaso</u>', null) ?> | 
-    <?= link_href('inventory/retur-pembelian/', '<u>Retur Pembelian</u>', null) ?> |
-    <?= link_href('transaksi/pp-uang/', '<u>Penerimaan dan Pengeluaran Uang</u>', null) ?>-->
+                <?php for ($i = 1; $i <= 2; $i++) { ?>
+                    <tr class="<?= ($i % 2 == 0) ? 'even' : 'odd' ?>">
+                        <td align="center">&nbsp;</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td align="right"></td>
+                        <td align="right"></td>
+                        <td align="right"></td>
+                    </tr>
+                <?php }
+                ?>
+            </table>
+            </div>
+        </div>
+        <!--<?= link_href('inventory/inkaso/', '<u>Inkaso</u>', null) ?> | 
+        <?= link_href('inventory/retur-pembelian/', '<u>Retur Pembelian</u>', null) ?> |
+        <?= link_href('transaksi/pp-uang/', '<u>Penerimaan dan Pengeluaran Uang</u>', null) ?>-->
+    </div>
 </div>

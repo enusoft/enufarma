@@ -3,12 +3,21 @@
 <script type="text/javascript">
 $(function() {
     $('#tabs').tabs();
+    get_data_list();
     $('#search').button({
         icons: {
             secondary: 'ui-icon-search'
         }
     }).click(function() {
         get_data_list();
+    });
+    $('select').change(function() {
+        var value = $(this).val();
+        if (value === 'History') {
+            $('#awal, #akhir').val('<?= date("d/m/Y") ?>').removeAttr('disabled');
+        } else {
+            $('#awal, #akhir').val('').attr('disabled','disabled');
+        }
     });
     $('#reset').button({
         icons: {

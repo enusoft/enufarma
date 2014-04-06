@@ -138,6 +138,52 @@ class Inventory extends CI_Controller {
         }
     }
     
+    function rencana_pemesanan() {
+        $data['title'] = 'Rencana Pemesanan';
+        $result = $this->m_referensi->satuan_load_data();
+        $data['kemasan']= $result['data'];
+        $this->load->view('inventory/rencana-pemesanan', $data);
+    }
+    
+    function get_list_data_rencana_pemesanan($limit, $page, $search) {
+        if ($page == 'undefined' or $page === NULL) {
+            $page = 1;
+        }
+        //$str = 'null';
+        $start = ($page - 1) * $limit;
+        $data['page'] = $page;
+        $data['limit'] = $limit;
+        $data['auto'] = $start+1;
+        $query = $this->m_inventory->get_data_rencana_pemesanan($limit, $start, $search);
+        $data['list_data'] = $query['data'];
+        $data['jumlah'] = $query['jumlah'];
+        
+        $data['paging'] = paging_ajax($data['jumlah'], $limit, $page, 1, null);
+        return $data;
+    }
+    
+    function manage_rencana_pemesanan($status, $page = null) {
+        $limit = 15;
+        switch ($status) {
+            case 'list':
+                $search['key'] = $_GET['search'];
+                //$search['id']  = $_GET['id'];
+                $data = $this->get_list_data_rencana_pemesanan($limit, $page, $search);
+                $this->load->view('inventory/pemesanan-plant-list', $data);
+                break;
+            case 'save': 
+                $data = $this->m_inventory->save_rencana_pemesanan();
+                die(json_encode($data));
+                break;
+            
+        }
+    }
+    
+    function edit_rencana_pemesanan() {
+        $data['list_data'] = $this->m_inventory->get_list_rencana_pemesanan_all()->result();
+        $this->load->view('inventory/rencana-pemesanan-list', $data);
+    }
+    
     function cetak_sp() {
         $id             = get_safe('id');
         $perundangan    = get_safe('perundangan');
@@ -286,6 +332,7 @@ class Inventory extends CI_Controller {
                 $search['akhir']    = date2mysql(urldecode(get_param('akhir')));
                 $search['id_supplier'] = get_param('id_supplier');
                 $search['faktur']   = get_param('faktur');
+                $search['status']   = 'cetak';
                 $data = $this->get_list_data_penerimaan($limit, $page, $search);
                 $this->load->view('laporan/lap-penerimaan-print', $data);
                 break;
@@ -615,6 +662,7 @@ class Inventory extends CI_Controller {
                 $search['awal']     = date2mysql(urldecode(get_param('awal')));
                 $search['akhir']    = date2mysql(urldecode(get_param('akhir')));
                 $search['id_supplier'] = get_param('id_supplier');
+                $search['status']   = 'cetak';
                 $data = $this->get_list_data_pemesanan($limit, $page, $search);
                 $this->load->view('laporan/lap-pemesanan-print', $data);
                 break;

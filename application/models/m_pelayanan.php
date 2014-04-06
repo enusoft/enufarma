@@ -2107,17 +2107,27 @@ class M_pelayanan extends CI_Model {
                     uang_pembayaran = '". currencyToNumber(post_param('tunai'))."'";
             $this->db->query($query2);
             $id_penjualan = $this->db->insert_id();
-            
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
+            }
+            $query2= "insert into arus_kas set
+                id_transaksi = '$id_penjualan',
+                transaksi = 'Penjualan Resep',
+                id_users = '".$this->session->userdata('id_user')."',
+                waktu = NOW(),
+                masuk = '$totallica'";
+            $this->db->query($query2);
             jurnal_debet('1.1.3.3', 'Penjualan Resep', $totallica, $id_penjualan);
             jurnal_kredit('4.1.5.1.4', 'Penjualan Resep', ($totallica-$tuslah), $id_penjualan);
             jurnal_kredit('4.1.5.3', 'Penjualan Resep', $tuslah, $id_penjualan);
         } else {
-            $this->db->delete('penjualan', array('id_resep' => $id));
-            $get = $this->db->get_where('penjualan', array('id_resep' => $id));
+            $get = $this->db->query("select id from penjualan where id_resep = '$id_resep'")->row();
             $this->db->query("delete from jurnal where id_transaksi = '".$get->id."' and transaksi = 'Penjualan Resep'");
+            $this->db->delete('arus_kas', array('id_transaksi' => $get->id, 'transaksi' => 'Penjualan Resep'));
+            $this->db->delete('penjualan', array('id_resep' => $id_resep));
             $query2= "insert into penjualan set
                     waktu = NOW(),
-                    id_resep = '$id',
+                    id_resep = '$id_resep',
                     id_pasien = '$pasien',
                     diskon_persen = '0',
                     diskon_rupiah = '0',
@@ -2128,6 +2138,16 @@ class M_pelayanan extends CI_Model {
                     uang_pembayaran = '". currencyToNumber(post_param('tunai'))."'";
             $this->db->query($query2);
             $id_penjualan = $this->db->insert_id();
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
+            }
+            $query2= "insert into arus_kas set
+                id_transaksi = '$id_penjualan',
+                transaksi = 'Penjualan Resep',
+                id_users = '".$this->session->userdata('id_user')."',
+                waktu = NOW(),
+                masuk = '$totallica'";
+            $this->db->query($query2);
             
             jurnal_debet('1.1.3.3', 'Penjualan Resep', $totallica, $id_penjualan);
             jurnal_kredit('4.1.5.1.4', 'Penjualan Resep', ($totallica-$tuslah), $id_penjualan);
@@ -2371,6 +2391,8 @@ class M_pelayanan extends CI_Model {
                 waktu = '$tanggal',
                 masuk = '$pembayaran'";
             $this->db->query($query2);
+            
+            
             if ($this->db->trans_status() === FALSE) {
                 $this->db->trans_rollback();
                 $result['status'] = FALSE;
@@ -2617,6 +2639,22 @@ class M_pelayanan extends CI_Model {
         return $data;
     }
     
+    function get_data_penjualan_non_resep_edit($id) {
+        $sql = "select p.*, b.id, p.id as id_penjualan, date(p.waktu) as tanggal, pl.nama as customer, pl.id as id_customer,
+            concat_ws(' ',b.nama,b.kekuatan,s.nama) as nama, st.nama as kemasan, dp.disc_pr as diskon_persen, dp.disc_rp as diskon_rupiah,
+            k.isi_satuan, dp.qty, dp.harga_jual as harga_jual_nr, (dp.harga_jual*dp.qty) as subtotal
+            from penjualan p
+            join detail_penjualan dp on (p.id = dp.id_penjualan)
+            join kemasan k on (k.id = dp.id_kemasan)
+            join barang b on (k.id_barang = b.id)
+            left join satuan s on (b.satuan_kekuatan = s.id)
+            left join satuan st on (k.id_kemasan = st.id)
+            left join pasien ps on (p.id_pasien = ps.id)
+            left join penduduk pl on (pl.id = ps.id)
+            where p.id = '$id' order by p.waktu desc";
+        return $this->db->query($sql);
+    }
+    
     function save_penjualan_non_resep() {
         $this->db->trans_begin();
         $id_jual    = $_POST['id_penjualan'];
@@ -2642,7 +2680,10 @@ class M_pelayanan extends CI_Model {
                 total = '$total',
                 tuslah = '$tuslah',
                 embalage = '$embalage',
-                bayar = '$uangserah'";
+                bayar = '$pembayaran',
+                uang_pembayaran = '$uangserah',
+                id_unit = '".$this->session->userdata('id_unit')."',
+                id_users = '".$this->session->userdata('id_user')."'";
             
             $this->db->query($sql);
             $id_penjualan = $this->db->insert_id();
@@ -2693,6 +2734,13 @@ class M_pelayanan extends CI_Model {
                     
                 //}
             }
+            $query2= "insert into arus_kas set
+                id_transaksi = '$id_penjualan',
+                transaksi = 'Penjualan Non Resep',
+                id_users = '".$this->session->userdata('id_user')."',
+                waktu = '$tanggal',
+                masuk = '$pembayaran'";
+            $this->db->query($query2);
             /*$this->db->query("insert into jurnal set
                 waktu = '".date("Y-m-d H:i:s")."',
                 id_transaksi = $id_penjualan,
@@ -2721,36 +2769,29 @@ class M_pelayanan extends CI_Model {
         } else {
             $this->db->query("delete from detail_penjualan where id_penjualan = '$id_jual'");
             $this->db->query("delete from jurnal where id_transaksi = '$id_jual' and transaksi = 'Penjualan'");
-            $this->db->query("delete from detail_bayar_penjualan where id_penjualan = '$id_jual'");
             $this->db->query("delete from arus_kas where id_transaksi = '$id_jual' and transaksi = 'Penjualan Non Resep'");
             $this->db->query("delete from stok where id_transaksi = '$id_jual' and transaksi = 'Penjualan'");
             $sql = "update penjualan set
                 waktu = '$tanggal',
-                id_pelanggan = $customer,
                 diskon_persen = '$diskon_pr',
                 diskon_rupiah = '$diskon_rp',
                 ppn = '$ppn',
                 total = '$total',
                 tuslah = '$tuslah',
                 embalage = '$embalage',
-                id_asuransi = $asuransi,
-                reimburse = '$reimburse',
-                bayar = '$uangserah'
+                bayar = '$pembayaran',
+                uang_pembayaran = '$uangserah',
+                id_unit = '".$this->session->userdata('id_unit')."',
+                id_users = '".$this->session->userdata('id_user')."'
                 where id = '$id_jual'";
 
             $this->db->query($sql);
             $id_penjualan = $id_jual;
 
-            $query = "insert into detail_bayar_penjualan set
-                waktu = '$tanggal',
-                id_penjualan = '$id_penjualan',
-                bayar = '$pembayaran'";
-            $this->db->query($query); // insert ke tabel detail pembayaran
-
             $query2= "insert into arus_kas set
                 id_transaksi = '$id_penjualan',
                 transaksi = 'Penjualan Non Resep',
-                id_users = '$_SESSION[id_user]',
+                id_users = '".$this->session->userdata('id_user')."',
                 waktu = '$tanggal',
                 masuk = '$pembayaran'";
             $this->db->query($query2);
@@ -2763,13 +2804,12 @@ class M_pelayanan extends CI_Model {
             $disc_pr    = isset($_POST['diskon_persen'])?$_POST['diskon_persen']:'0';
             $disc_rp    = isset($_POST['diskon_rupiah'])?$_POST['diskon_rupiah']:'0';
             foreach ($id_barang as $key => $data) {
-                $query = $this->db->query("select k.*, b.hna from kemasan k join barang b on (k.id_barang = b.id) where k.id = '$kemasan[$key]'");
-                $rows  = $this->db->fetch_object($query);
+                $rows = $this->db->query("select k.*, b.hna from kemasan k join barang b on (k.id_barang = b.id) where k.id_kemasan = '$kemasan[$key]' and k.id_barang = '$data'")->row();
                 $isi   = $rows->isi*$rows->isi_satuan;
                 $expired = ($ed[$key] !== '')?"'.$ed[$key].'":'NULL';
                 $sql = "insert into detail_penjualan set
                     id_penjualan = '$id_penjualan',
-                    id_kemasan = '$kemasan[$key]',
+                    id_kemasan = '".$rows->id."',
                     expired = $expired,
                     hna = '".$rows->hna."',
                     qty = '".$jumlah[$key]."',
@@ -2778,8 +2818,11 @@ class M_pelayanan extends CI_Model {
                     disc_rp = '".currencyToNumber($disc_rp[$key])."'";
 
                 $this->db->query($sql);
-
-                $last = $this->db->fetch_object($this->db->query("select * from stok where id_barang = '$data' order by id desc limit 1"));
+                if ($this->db->trans_status() === FALSE) {
+                    $this->db->trans_rollback();
+                    $result['status'] = FALSE;
+                }
+                $last = $this->db->query("select * from stok where id_barang = '$data' order by id desc limit 1")->row();
 
                 //$fefo  = $this->db->query("SELECT id_barang, ed, (sum(masuk)-sum(keluar)) as sisa FROM `stok` WHERE id_barang = '$data' and ed > '".date("Y-m-d")."' group by ed order by ed");
                 //while ($val = $this->db->fetch_object($fefo)) {
@@ -2792,22 +2835,22 @@ class M_pelayanan extends CI_Model {
                         keluar = '".($jumlah[$key]*$isi)."'";
                     //echo $stok;
                     $this->db->query($stok);
+                    if ($this->db->trans_status() === FALSE) {
+                        $this->db->trans_rollback();
+                        $result['status'] = FALSE;
+                    }
                 //}
             }
-            $this->db->query("insert into jurnal set
-                waktu = '".date("Y-m-d H:i:s")."',
-                id_transaksi = $id_penjualan,
-                transaksi = 'Penjualan',
-                id_sub_sub_sub_sub_rekening = '1',
-                debet = '$total'");
-
-            $this->db->query("insert into jurnal set
-                waktu = '".date("Y-m-d H:i:s")."',
-                id_transaksi = $id_penjualan,
-                transaksi = 'Penjualan',
-                id_sub_sub_sub_sub_rekening = '231',
-                kredit = '$total'");
-            die(json_encode(array('status' => TRUE, 'id' => $id_penjualan, 'act' => 'edit')));
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
+                $result['status'] = FALSE;
+            } else {
+                $this->db->trans_commit();
+                $result['status'] = TRUE;
+                $result['id'] = $id_penjualan;
+                $result['act'] = 'edit';
+            }
+            return $result;
         }
     }
     

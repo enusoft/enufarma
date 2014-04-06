@@ -23,89 +23,59 @@ if (isset($_GET['do'])) {
                 });
             });
             return false;
-        })
-    })
+        });
+    });
 </script>
 <div id="result_detail" style="display: none"></div>
-    <table class="tabel" width="100%" <?= $border ?>>
+    <table class="list-data" width="100%" <?= $border ?>>
         <thead>
         <tr>
-            <th>Waktu</th>
-            <th>ID Transaksi</th>
-            <th>Jenis Transaksi</th>
-            <th>Nama</th>
-            <th>Awal</th>
-            <th>Penerimaan</th>
-            <th>Pengeluaran</th>
-            <th>Akhir</th>
+            <th width="3%">No.</th>
+            <th width="10%">Waktu</th>
+            <th width="3%">ID</th>
+            <th width="10%">Jenis Transaksi</th>
+            <th width="30%">Keterangan</th>
+            <th width="10%">Masuk</th>
+            <th width="10%">Keluar</th>
+            <th width="10%">Sisa</th>
         </tr>
         </thead>
         <tbody>
         <?php
         $penerimaan = 0;
         $pengeluaran= 0;
-        
-        foreach ($list_data as $key => $data) { 
-            $link = null;
-            if ($data->transaksi_jenis == 'Inkaso') { $link = base_url('inventory/inkaso_detail/'.$data->transaksi_id); }
-            if ($data->transaksi_jenis == 'Retur Pembelian') { $link = base_url('inventory/retur-pembelian/'.$data->transaksi_id); }
-            if ($data->transaksi_jenis == 'Penjualan') { $link = base_url('inventory/penjualan/'.$data->transaksi_id); }
-            if ($data->transaksi_jenis == 'Retur Penjualan') { $link = base_url('inventory/retur-penjualan/'.$data->transaksi_id); }
-            if ($data->transaksi_jenis == 'Billing') { $link = "billing"; }
-            if ($data->transaksi_jenis == 'Penerimaan dan Pengeluaran') { $link = base_url('inventory/pp_uang_detail/'.$data->transaksi_id); }
-            if ($data->transaksi_jenis == 'Penerimaan Retur Pembelian') { $link = base_url('inventory/reretur_pembelian_detail/'.$data->transaksi_id); }
-            if ($data->transaksi_jenis == 'Pengeluaran Retur Penjualan') { $link = base_url('inventory/reretur_penjualan_detail/'.$data->transaksi_id); }
-            if ($data->transaksi_jenis == 'Penjualan Non Resep') { $link = base_url('inventory/penjualan_detail/'.$data->transaksi_id); }
-            if ($data->transaksi_jenis == 'Pembayaran Billing Pasien') { $link = base_url('laporan/pembayaran_billing_pasien_detail/'.$data->transaksi_id); }
+        $sisa = 0;
+        foreach ($list_data as $key => $data) {
+            $sisa = $sisa+($data->masuk-$data->keluar);
         ?>
         <tr class="<?= ($key%2==1)?'even':'odd' ?>">
+            <td align="center"><?= ++$key ?></td>
             <td align="center"><?= datetime($data->waktu) ?></td>
-            <td align="center"><?= isset($_GET['do'])?$data->transaksi_id:'<a class="view_transaction" href='.$link.'>'.$data->transaksi_id.'</a>' ?></td>
-<!--            <td align="center"><?= isset($_GET['do'])?$data->transaksi_id:$data->transaksi_id ?></td>-->
-            <td><?= $data->transaksi_jenis ?></td>
-            <td><?= $data->penerimaan_pengeluaran_nama ?></td>
-            <td align="right"><?= rupiah($data->awal_saldo) ?></td>
-            <td align="right"><?= rupiah($data->penerimaan) ?></td>
-            <td align="right"><?= rupiah($data->pengeluaran) ?></td>
-            <td align="right"><?= rupiah($data->akhir_saldo) ?></td>
+            <td align="center"><?= isset($_GET['do'])?$data->id_transaksi:''.$data->id_transaksi.'' ?></td>
+            <td><?= $data->transaksi ?></td>
+            <td><?= $data->keterangan ?></td>
+            <td align="right"><?= rupiah($data->masuk) ?></td>
+            <td align="right"><?= rupiah($data->keluar) ?></td>
+            <td align="right"><?= rupiah($sisa) ?></td>
         </tr>
         <?php 
         
-        $penerimaan = $penerimaan+$data->penerimaan;
-        $pengeluaran= $pengeluaran+$data->pengeluaran;
+        $penerimaan = $penerimaan+$data->masuk;
+        $pengeluaran= $pengeluaran+$data->keluar;
         }
         ?>
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="5"></td>
-                <td align="right"><?= rupiah($penerimaan) ?></td>
-                <td align="right"><?= rupiah($pengeluaran) ?></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
                 <td></td>
             </tr>
-            <?php
-            if ($_GET['jenis'] == 'Penjualan') {
-                $q = null;
-                if ($_GET['awal'] != '' and $_GET['akhir'] != '') {
-                    $q = " and date(td.waktu) between '".  date2mysql($_GET['awal'])."' and '".  date2mysql($_GET['akhir'])."'";
-                }
-                $array = $this->db->query("SELECT p.total FROM transaksi_detail td 
-                    join penjualan p on (p.id = td.transaksi_id) 
-                    WHERE td.transaksi_jenis = 'Penjualan' $q group by td.transaksi_id
-                ")->result();
-                $tagihan = 0;
-                foreach ($array as $total) {
-                    $tagihan = $tagihan + $total->total;
-                }
-                
-            ?>
-            <tr>
-                <td colspan="5" align="right"> Total Tagihan Penjualan</td>
-                <td align="right"><?= rupiah($tagihan) ?></td>
-                <td align="right"></td>
-                <td></td>
-            </tr>
-            <?php } ?>
         </tfoot>
     </table>
     <?php

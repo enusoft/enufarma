@@ -26,7 +26,10 @@
             load_data_pemesanan(page, search);
         }
         if (active === 1) {
-            load_data_pemesanan(page, search);
+            load_data_defecta(page, search);
+        }
+        if (active === 2) {
+            load_data_rencana_pemesanan(page, search);
         }
     }
 </script>

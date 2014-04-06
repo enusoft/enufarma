@@ -598,7 +598,14 @@ class Laporan extends CI_Controller {
 
     function kas() {
         $data['title'] = 'Arus Kas Kasir';
-        $data['jenis_transaksi'] = $this->configuration->jenis_transaksi();
+        $data['jenis_transaksi'] = array(
+            '' => 'Semua Transaksi ...',
+            'Penjualan Resep' => 'Penjualan Resep',
+            'Penjualan Non Resep' => 'Penjualan Non Resep',
+            'Inkaso' => 'Inkaso',
+            'Retur Penjualan' => 'Retur Penjualan',
+            'Lain-lain' => 'Lain-lain'
+        );
         $this->load->view('laporan/kas', $data);
     }
 
@@ -966,8 +973,19 @@ class Laporan extends CI_Controller {
         }
         die(json_encode($result));
     }
-
-
+    
+    function arus_kas() {
+        $data['title'] = 'Arus Kas';
+        $data['jenis_transaksi'] = array(
+            '' => 'Semua Transaksi ...',
+            'Penjualan Resep' => 'Penjualan Resep',
+            'Penjualan Non Resep' => 'Penjualan Non Resep',
+            'Inkaso' => 'Inkaso',
+            'Retur Penjualan' => 'Retur Penjualan',
+            'Lain-lain' => 'Lain-lain'
+        );
+        $this->load->view('laporan/kas', $data);
+    }
 }
 
 ?>

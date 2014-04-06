@@ -4548,12 +4548,9 @@ class M_inventory extends CI_Model {
             $q.="where date(waktu) between '".date2mysql($awal)."' and '".date2mysql($akhir)."'";
         }
         if ($jenis != null) {
-            $q.=" and transaksi_jenis = '$jenis'";
+            $q.=" and transaksi = '$jenis'";
         }
-        if ($nama != null) {
-            $q.=" and penerimaan_pengeluaran_nama like ('%$nama%')";
-        }
-        $sql = "select * from kas $q";
+        $sql = "select * from arus_kas $q";
         //echo $sql;
         return $this->db->query($sql);
     }
@@ -5152,6 +5149,18 @@ class M_inventory extends CI_Model {
             nominal = '$nominal'";
         $this->db->query($sql);
         $result['id'] = $this->db->insert_id();
+        
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+        }
+        $query2= "insert into arus_kas set
+            id_transaksi = '$id_penerimaan',
+            transaksi = 'Inkaso',
+            id_users = '".$this->session->userdata('id_user')."',
+            waktu = NOW(),
+            keluar = '$nominal'";
+        $this->db->query($query2);
+        
         jurnal_debet('2.1.1.1', 'Inkaso', $nominal, $result['id']);
         jurnal_kredit('1.1.1.1', 'Inkaso', $nominal, $result['id']);
         
@@ -5503,6 +5512,25 @@ class M_inventory extends CI_Model {
         where p.id is not NULL $q order by p.tanggal desc";
         
         $limitation = null;
+        if (!isset($search['status'])) {
+            $limitation.=" limit $start , $limit";
+        }
+        $query = $this->db->query($sql. $limitation);
+        //echo $sql . $q . $limitation;
+        $queryAll = $this->db->query($sql);
+        $data['data'] = $query->result();
+        $data['jumlah'] = $queryAll->num_rows();
+        return $data;
+    }
+    
+    function get_data_rencana_pemesanan($limit, $start, $param) {
+        if (isset($param['key'])) {
+            //$limit = " limit ".$param['start'].", ".$param['limit']."";
+        }
+        $sql = "select d.*, concat_ws(' ',b.nama, b.kekuatan, s.nama) as nama_barang from defecta d
+            join barang b on (d.id_barang = b.id)
+            left join satuan s on (b.satuan_kekuatan = s.id) where d.status = '0' order by b.nama";
+        $limitation = null;
         $limitation.=" limit $start , $limit";
         $query = $this->db->query($sql. $limitation);
         //echo $sql . $q . $limitation;
@@ -5510,6 +5538,68 @@ class M_inventory extends CI_Model {
         $data['data'] = $query->result();
         $data['jumlah'] = $queryAll->num_rows();
         return $data;
+
+    }
+    
+    function save_rencana_pemesanan() {
+        $this->db->trans_begin();
+        $id             = $_POST['no_sp'];
+        $tanggal        = date2mysql($_POST['tanggal'])." ".date("H:i:s");
+        $tgl_datang     = date2mysql($_POST['tanggal_datang']);
+        $id_supplier    = $_POST['id_supplier'];
+        $id_barang      = $_POST['id_barang'];
+        $id_kemasan     = $_POST['kemasan'];
+        $jumlah         = $_POST['jumlah'];
+        //$id_user        = 'NULL';
+        $sql = "insert INTO pemesanan set
+            id = '$id',
+            tanggal = '$tanggal',
+            tgl_datang = '$tgl_datang',
+            id_supplier = '$id_supplier',
+            id_users = '".$this->session->userdata('id_user')."'";
+        $this->db->query($sql);
+        $id_pemesanan = $id;
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+            $result['status'] = FALSE;
+        }
+
+        foreach ($id_barang as $key => $data) {
+            $get = $this->db->get_where('kemasan', array('id_barang' => $data, 'id_kemasan' => $id_kemasan[$key]))->row();
+            $sql = "insert into detail_pemesanan set
+                id_pemesanan = '$id_pemesanan',
+                id_kemasan = '".$get->id."',
+                jumlah = '$jumlah[$key]'";
+            //echo "select id from kemasan where id_barang = '$data' and id_kemasan = '".$id_kemasan[$key]."'<br/>";
+            //echo $sql;
+            $this->db->query($sql);
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
+                $result['status'] = FALSE;
+            }
+            $this->db->query("update defecta set status = '1' where id_barang = '".$data."'");
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
+                $result['status'] = FALSE;
+            }
+        }
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+            $result['status'] = FALSE;
+        } else {
+            $this->db->trans_commit();
+            $result['status'] = TRUE;
+            $result['id'] = $id;
+        }
+        return $result;
+    }
+    
+    function get_list_rencana_pemesanan_all() {
+        $sql = "select d.*, concat_ws(' ',b.nama, b.kekuatan, s.nama) as nama_barang from defecta d
+            join barang b on (d.id_barang = b.id)
+            left join satuan s on (b.satuan_kekuatan = s.id) where d.status = '0' order by b.nama";
+        return $this->db->query($sql);
+
     }
     
     function get_data_defecta($limit, $start, $search) {
@@ -5628,7 +5718,7 @@ class M_inventory extends CI_Model {
         if (isset($search['awal'])) {
             $q.=" and p.tanggal between '".$search['awal']."' and '".$search['akhir']."'";
         }
-        if (isset($start)) {
+        if (isset($start) and !isset($search['status'])) {
             $limitation = " limit ".$start.", ".$limit."";
         }
 
@@ -5842,6 +5932,19 @@ class M_inventory extends CI_Model {
                     cara_bayar = 'Uang',
                     nominal = '$total'";
                 $this->db->query($q_inkaso);
+                if ($this->db->trans_status() === FALSE) {
+                    $this->db->trans_rollback();
+                }
+                $query2= "insert into arus_kas set
+                    id_transaksi = '$id',
+                    transaksi = 'Inkaso',
+                    id_users = '".$this->session->userdata('id_user')."',
+                    waktu = NOW(),
+                    keluar = '$total'";
+                $this->db->query($query2);
+                if ($this->db->trans_status() === FALSE) {
+                    $this->db->trans_rollback();
+                }
                 $id_inkaso = $this->db->insert_id();
                 if ($this->db->trans_status() === FALSE) {
                     $this->db->trans_rollback();
@@ -5889,6 +5992,7 @@ class M_inventory extends CI_Model {
             $id = $id_penerimaan;
             $this->db->query("delete from detail_penerimaan where id_penerimaan = '$id_penerimaan'");
             $this->db->query("delete from stok where id_transaksi = '$id' and transaksi = 'Penerimaan'");
+            $this->db->delete('arus_kas', array('id_transaksi' => $id, 'transaksi' => 'Penerimaan'));
             //$this->db->query("delete from jurnal where id_transaksi = '$id' and transaksi = 'Penerimaan'");
             if ($this->db->trans_status() === FALSE) {
                 $this->db->trans_rollback();
@@ -5985,38 +6089,6 @@ class M_inventory extends CI_Model {
                 }*/
             }
 
-            /*$akun_debet = 188;
-            $akun_kredit= 84;
-            $this->db->query("insert into jurnal set
-                waktu = '".date("Y-m-d H:i:s")."',
-                id_transaksi = $id,
-                transaksi = 'Penerimaan',
-                id_sub_sub_sub_sub_rekening = $akun_debet,
-                debet = '$total'");
-
-            $this->db->query("insert into jurnal set
-                waktu = '".date("Y-m-d H:i:s")."',
-                id_transaksi = $id,
-                transaksi = 'Penerimaan',
-                id_sub_sub_sub_sub_rekening = $akun_kredit,
-                kredit = '$total'");
-
-            if ($materai !== '0') { // materai
-                $this->db->query("insert into jurnal set
-                    waktu = '".date("Y-m-d H:i:s")."',
-                    id_transaksi = $id,
-                    transaksi = 'Penerimaan',
-                    id_sub_sub_sub_sub_rekening = '156',
-                    debet = '$total'");
-
-                $this->db->query("insert into jurnal set
-                    waktu = '".date("Y-m-d H:i:s")."',
-                    id_transaksi = $id,
-                    transaksi = 'Penerimaan',
-                    id_sub_sub_sub_sub_rekening = '51',
-                    kredit = '$total'");
-            }*/
-
             if ($status === 'Cash') {
                 $row = $this->db->query("select substr(no_ref, 4,3) as id  from inkaso order by id desc limit 1")->row();
                 if (!isset($row->id)) {
@@ -6031,6 +6103,19 @@ class M_inventory extends CI_Model {
                     cara_bayar = 'Uang',
                     nominal = '$total'";
                 $this->db->query($q_inkaso);
+                if ($this->db->trans_status() === FALSE) {
+                    $this->db->trans_rollback();
+                }
+                $query2= "insert into arus_kas set
+                    id_transaksi = '$id',
+                    transaksi = 'Inkaso',
+                    id_users = '".$this->session->userdata('id_user')."',
+                    waktu = NOW(),
+                    keluar = '$total'";
+                $this->db->query($query2);
+                if ($this->db->trans_status() === FALSE) {
+                    $this->db->trans_rollback();
+                }
                 $id_inkaso = $this->db->insert_id();
                 if ($this->db->trans_status() === FALSE) {
                     $this->db->trans_rollback();
