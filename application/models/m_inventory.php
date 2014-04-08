@@ -5712,8 +5712,8 @@ class M_inventory extends CI_Model {
         if (isset($search['id_supplier']) and $search['id_supplier'] !== '') {
             $q.=" and s.id = '".$search['id_supplier']."'";
         }
-        if (isset($search['faktur']) and $search['faktur'] !== '') {
-            $q.=" and p.faktur = '".$search['faktur']."'";
+        if (isset($search['key']) and $search['key'] !== '') {
+            $q.=" and p.faktur like ('%".$search['key']."%')";
         }
         if (isset($search['awal'])) {
             $q.=" and p.tanggal between '".$search['awal']."' and '".$search['akhir']."'";

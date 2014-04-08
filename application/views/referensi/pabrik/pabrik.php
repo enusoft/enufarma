@@ -5,7 +5,7 @@ $(function() {
     $('#tabs').tabs();
     $('#search').keyup(function() {
         var value = $(this).val();
-        load_data_pabrik('',value,'');
+        load_data_pabrik(1,value,'');
     });
 });
 function form_add() {
@@ -84,7 +84,7 @@ $('#reset').button({
         primary: 'ui-icon-refresh'
     }
 }).click(function() {
-    load_data_pabrik();
+    load_data_pabrik(1);
     $('#search').val('');
 });
 function load_data_pabrik(page, search, id) {

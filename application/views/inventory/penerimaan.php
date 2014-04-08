@@ -1,7 +1,7 @@
 <title><?= $title ?></title>
 <?= $this->load->view('message') ?>
 <script type="text/javascript">
-load_data_penerimaan();
+load_data_penerimaan(1);
     $.cookie('session', 'false');
     $(document).keydown(function(e) {
         if (e.keyCode === 120) {
@@ -1063,21 +1063,26 @@ function form_add() {
         return false;
     });
 }
-$('#tabs').tabs();
-$('#button').button({
-    icons: {
-        secondary: 'ui-icon-newwin'
-    }
-}).click(function() {
-    form_add();
-});
-$('#reset').button({
-    icons: {
-        secondary: 'ui-icon-refresh'
-    }
-}).click(function() {
-    load_data_penerimaan();
-});
+$(function() {
+    $('#search').keyup(function() {
+        load_data_penerimaan(1, $(this).val(), '');
+    });
+    $('#tabs').tabs();
+    $('#button').button({
+        icons: {
+            secondary: 'ui-icon-newwin'
+        }
+    }).click(function() {
+        form_add();
+    });
+    $('#reset').button({
+        icons: {
+            secondary: 'ui-icon-refresh'
+        }
+    }).click(function() {
+        load_data_penerimaan();
+    });
+}); 
 function load_data_penerimaan(page, search, id) {
     pg = page; src = search; id_barg = id;
     if (page === undefined) { var pg = ''; }
@@ -1159,6 +1164,7 @@ function edit_penerimaan(data) {
         <div id="tabs-1">
             <button id="button">Tambah Penerimaan (F9)</button>
             <button id="reset">Reset</button>
+            <?= form_input('key', NULL, 'id=search class=search placeholder="Cari Nomor faktur ..."') ?>
             <div id="result-penerimaan">
 
             </div> 

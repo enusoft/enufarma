@@ -5,7 +5,7 @@ $(function() {
     $('#tabs').tabs();
     $('#search').keyup(function() {
         var value = $(this).val();
-        load_data_supplier('',value,'');
+        load_data_supplier(1,value,'');
     });
 });
 function form_add() {
@@ -43,8 +43,8 @@ var str = '<div id=form_add>'+
     
     $('#save_barang').submit(function() {
         if ($('#nama').val() === '') {
-            alert('Nama barang tidak boleh kosong !');
-            $('#nama').focus(); return false;
+            alert_dinamic('Nama supplier tidak boleh kosong !','#nama');
+            return false;
         }
         var cek_id = $('#id_supplier').val();
         $.ajax({
@@ -84,11 +84,11 @@ $('#reset').button({
         primary: 'ui-icon-refresh'
     }
 }).click(function() {
-    load_data_supplier();
+    load_data_supplier(1);
     $('#search').val('');
 });
 function load_data_supplier(page, search, id) {
-    pg = page; src = search; id_barg = id;
+    pg = page; src = search; id_primary = id;
     if (page === undefined) { var pg = ''; }
     if (search === undefined) { var src = ''; }
     if (id === undefined) { var id_primary = ''; }

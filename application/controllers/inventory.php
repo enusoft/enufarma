@@ -288,7 +288,7 @@ class Inventory extends CI_Controller {
         $data['list_data'] = $query['data'];
         $data['jumlah'] = $query['jumlah'];
         
-        $data['paging'] = paging_ajax($data['jumlah'], $limit, $page, 1, null);
+        $data['paging'] = paging_ajax($data['jumlah'], $limit, $page, 1, $search['key']);
         return $data;
     }
     
