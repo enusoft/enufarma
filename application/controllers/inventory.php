@@ -20,7 +20,8 @@ class Inventory extends CI_Controller {
         $data['farmakoterapi'] = $this->m_referensi->farmakoterapi_load_data()->result();
         $data['fda'] = $this->m_referensi->fda_load_data();
         $data['status'] = array('Hibah','Program Pemerintah','Program Khusus');
-        $data['range_terapi'] = array('Obat High Alert','Non-High Alert');
+        $data['range_terapi'] = array('Index Terapi Sempit','Index Terapi Lebar');
+        $data['high_alert'] = array('Obat High Alert','Non-High Alert');
         $data['pengawasan'] = array('Dalam Pengawasan','Tidak Dalam Pengawasan');
         $data['fornas'] = array('Ya','Tidak');
         $this->load->view('inventory/barang', $data);

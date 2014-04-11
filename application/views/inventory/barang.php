@@ -233,9 +233,9 @@ var str = '<div id=form_add>'+
                                 '<tr><td>Satuan Kekuatan:</td><td><select name=s_sediaan id=s_sediaan><option value="">Pilih ...</option><?php foreach ($satuan_kekuatan as $data) { echo '<option value="'.$data->id.'">'.$data->nama.'</option>'; } ?></select></td></tr>'+
                                 '<tr><td>Jenis Sediaan:</td><td><select name=sediaan id=sediaan><option value="">Pilih ...</option><?php foreach ($sediaan as $data) { echo '<option value="'.$data->id.'">'.$data->nama.'</option>'; } ?></select></td></tr>'+
                                 '<tr><td>Golongan Margin:</td><td><select name=golongan id=golongan><option value="">Pilih ...</option><?php foreach ($golongan as $data) { echo '<option value="'.$data->id.'">'.$data->nama.'</option>'; } ?></select></td></tr>'+
-                                '<tr><td>Formularium:</td><td><?= form_radio('formularium', 'Ya', FALSE) ?> Ya <?= form_radio('formularium', 'Tidak', TRUE) ?> Tidak</td></tr>'+
+                                '<tr><td>Formularium:</td><td><?= form_radio('formularium', 'Ya', FALSE, 'id=yes') ?> Ya <?= form_radio('formularium', 'Tidak', TRUE, 'id=no') ?> Tidak</td></tr>'+
                                 '<tr><td>Rute Pemberian:</td><td><select name=admr id=admr><option value="">Pilih ...</option><?php foreach ($admr as $data) { echo '<option value="'.$data.'">'.$data.'</option>'; } ?></select></td></tr>'+
-                                '<tr><td></td><td><?= form_radio('generik', '1', TRUE) ?> Generik <?= form_radio('generik', '0', FALSE) ?> Non Generik</td></tr>'+
+                                '<tr><td></td><td><?= form_radio('generik', '1', TRUE, 'id=ya') ?> Generik <?= form_radio('generik', '0', FALSE,'id=tidak') ?> Non Generik</td></tr>'+
                                 '<tr><td>Golongan Obat:</td><td><select name="perundangan" id="perundangan"><?php foreach ($perundangan as $data) { echo '<option value="'.$data.'">'.$data.'</option>'; } ?></select></td></tr>'+
                                 '<tr><td>Kategori:</td><td><select style="max-width: 147px;" name=farmakoterapi id=farmakoterapi><option value="">Pilih ...</option><?php foreach ($farmakoterapi as $data) { echo '<option value="'.$data->id.'">'.$data->nama.'</option>'; } ?></select></td></tr>'+
                                 '<tr><td>Sub Kategori:</td><td><select name=kls_terapi id=kls_terapi style="max-width: 147px;"><option value="">Pilih ...</option></select></td></tr>'+
@@ -244,7 +244,7 @@ var str = '<div id=form_add>'+
                                     '<tr><td>Pengawasan:</td><td><select name=pengawasan id=pengawasan><option value="">Pilih ...</option><?php foreach ($pengawasan as $data) { ?><option value="<?= $data ?>"><?= $data ?></option><?php } ?></select></td></tr>'+
                                     '<tr><td>Fornas:</td><td><select name=fornas id=fornas><option value="">Pilih ...</option><?php foreach ($fornas as $data) { ?><option value="<?= $data ?>"><?= $data ?></option><?php } ?></select></td></tr>'+
                                 '</table></div>'+
-                                
+
                                 '</td><td width=1%>&nbsp;</td><td width=40%>'+
                                 '<table width=100% class=data-input cellpadding=0 cellspacing=0>'+
                                     '<tr><td>Rak:</td><td><?= form_input('rak', NULL, 'id=rak style="width: 70px;"') ?></td></tr>'+
@@ -389,7 +389,7 @@ var str = '<div id=form_add>'+
                 $('#form_barang').submit();
             }, 
             "Cancel": function() {    
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }
         }, close: function() {
             $(this).dialog('close').remove();
@@ -500,6 +500,38 @@ function paginate(page, tab, search, active) {
 }
 
 function edit_barang(str) {
+    /*'<table cellpadding=0 cellspacing=0 width="100%"><tr valign=top><td width="55%"><table width=100% class=data-input cellpadding=0 cellspacing=0>'+
+        '<tr><td>Barcode:</td><td><?= form_input('barcode', NULL, 'id=barcode size=50') ?></td></tr>'+
+        '<tr><td width=30%>Nama Barang:</td><td><?= form_input('nama', NULL, 'id=nama size=50 onBlur="javascript:this.value=this.value.toUpperCase();"') ?></td></tr>'+
+        '<tr><td>Pabrik:</td><td><?= form_input('pabrik', NULL, 'id=pabrik size=50') ?><?= form_hidden('id_pabrik', NULL, 'id=id_pabrik') ?></td></tr>'+
+        '<tr><td>Kekuatan Obat:</td><td><?= form_input('kekuatan', NULL, 'id=kekuatan size=50') ?></td></tr>'+
+        '<tr><td>Satuan Kekuatan:</td><td><select name=s_sediaan id=s_sediaan><option value="">Pilih ...</option><?php foreach ($satuan_kekuatan as $data) { echo '<option value="'.$data->id.'">'.$data->nama.'</option>'; } ?></select></td></tr>'+
+        '<tr><td>Jenis Sediaan:</td><td><select name=sediaan id=sediaan><option value="">Pilih ...</option><?php foreach ($sediaan as $data) { echo '<option value="'.$data->id.'">'.$data->nama.'</option>'; } ?></select></td></tr>'+
+        '<tr><td>Golongan Margin:</td><td><select name=golongan id=golongan><option value="">Pilih ...</option><?php foreach ($golongan as $data) { echo '<option value="'.$data->id.'">'.$data->nama.'</option>'; } ?></select></td></tr>'+
+        '<tr><td>Formularium:</td><td><?= form_radio('formularium', 'Ya', FALSE, 'id=yes') ?> Ya <?= form_radio('formularium', 'Tidak', TRUE, 'id=no') ?> Tidak</td></tr>'+
+        '<tr><td>Rute Pemberian:</td><td><select name=admr id=admr><option value="">Pilih ...</option><?php foreach ($admr as $data) { echo '<option value="'.$data.'">'.$data.'</option>'; } ?></select></td></tr>'+
+        '<tr><td></td><td><?= form_radio('generik', '1', TRUE, 'id=ya') ?> Generik <?= form_radio('generik', '0', FALSE,'id=tidak') ?> Non Generik</td></tr>'+
+        '<tr><td>Golongan Obat:</td><td><select name="perundangan" id="perundangan"><?php foreach ($perundangan as $data) { echo '<option value="'.$data.'">'.$data.'</option>'; } ?></select></td></tr>'+
+        '<tr><td>Kategori:</td><td><select style="max-width: 147px;" name=farmakoterapi id=farmakoterapi><option value="">Pilih ...</option><?php foreach ($farmakoterapi as $data) { echo '<option value="'.$data->id.'">'.$data->nama.'</option>'; } ?></select></td></tr>'+
+        '<tr><td>Sub Kategori:</td><td><select name=kls_terapi id=kls_terapi style="max-width: 147px;"><option value="">Pilih ...</option></select></td></tr>'+
+        '<tr><td>Keterangan Khusus:</td><td><select name=status id=status><option value="">Pilih ...</option><?php foreach ($status as $data) { ?><option value="<?= $data ?>"><?= $data ?></option><?php } ?></select></td></tr>'+
+            '<tr><td>Status Obat:</td><td><select name=range_terapi id=range_terapi><option value="">Pilih ...</option><?php foreach ($range_terapi as $data) { ?><option value="<?= $data ?>"><?= $data ?></option><?php } ?></select></td></tr>'+
+            '<tr><td>Pengawasan:</td><td><select name=pengawasan id=pengawasan><option value="">Pilih ...</option><?php foreach ($pengawasan as $data) { ?><option value="<?= $data ?>"><?= $data ?></option><?php } ?></select></td></tr>'+
+            '<tr><td>Fornas:</td><td><select name=fornas id=fornas><option value="">Pilih ...</option><?php foreach ($fornas as $data) { ?><option value="<?= $data ?>"><?= $data ?></option><?php } ?></select></td></tr>'+
+        '</table></div>'+
+
+        '</td><td width=1%>&nbsp;</td><td width=40%>'+
+        '<table width=100% class=data-input cellpadding=0 cellspacing=0>'+
+            '<tr><td>Rak:</td><td><?= form_input('rak', NULL, 'id=rak style="width: 70px;"') ?></td></tr>'+
+            '<tr><td width=40%>Stok Minimal:</td><td><?= form_input('stok_min', NULL, 'id=stok_min style="width: 70px;"') ?></td></tr>'+
+            '<tr><td>HNA:</td><td><?= form_input('hna', NULL, 'id=hna onblur="FormNum(this)" onkeyup=hitung_hja() style="width: 70px;"') ?></td></tr>'+
+            '<tr><td>Margin Non Resep:</td><td><?= form_input('margin_nr', NULL, 'id=margin_nr style="width: 70px;" onkeyup=hitung_hja()') ?> %, H. Jual <?= form_input('margin_nr_rp', NULL, 'id=margin_nr_rp style="width: 63px;"') ?></td></tr>'+
+            '<tr><td>Margin Resep:</td><td><?= form_input('margin_r', NULL, 'id=margin_r style="width: 70px;" onkeyup=hitung_hja()') ?> %, H. Jual <?= form_input('margin_r_rp', NULL, 'id=margin_r_rp style="width: 63px;" onblur=FormNum(this)') ?></td></tr>'+
+            //'<tr><td>Image:</td><td><?= form_upload('mFile',null,'id=mFile') ?></td></tr>'+
+            //'<tr><td></td><td><img id=image src="" /></td></tr>'+
+            '<tr><td></td><td><?= form_checkbox('aktifasi', '1', TRUE) ?> Aktifasi</td></tr>'+
+        '</table>'+
+    '</td></tr></table>'+*/
     var arr = str.split('#');
     form_add();
     $('#barcode').val(arr[30]);
@@ -568,7 +600,7 @@ function delete_barang(id, page) {
             "OK": function() {
                 
                 $.ajax({
-                    url: '<?= base_url('referensi/manage_barang/delete') ?>?id='+id,
+                    url: '<?= base_url('inventory/manage_barang/delete') ?>?id='+id,
                     cache: false,
                     success: function() {
                         load_data_barang(page);

@@ -11,6 +11,9 @@
     var x = screen.width/2 - dWidth/2;
     var y = screen.height/2 - dHeight/2;
  
+ 
+ 
+ 
         $(function() {
             $('#riwayat_rm').hide();
             $('#tabs-utama').tabs();

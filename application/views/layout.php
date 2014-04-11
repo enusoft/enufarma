@@ -54,6 +54,7 @@
                     url: val,
                     cache: false
                 }).done(function( data ) {
+                    $('body').unbind('submit');
                     $('#loaddata').html(data);
                 });
                 return false;

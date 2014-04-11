@@ -89,8 +89,8 @@ $(function() {
     }).result(
     function(event,data,formated){
         $(this).val(data.faktur);
-        $('#id_supplier').val(data.id_supplier);
-        $('#supplier').val(data.supplier);
+        //$('#id_supplier').val(data.id_supplier);
+        //$('#supplier').val(data.supplier);
     });
 });
 function paging(page) {

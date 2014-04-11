@@ -30,6 +30,18 @@ class M_inventory extends CI_Model {
         return $this->db->query($sql);
     }
     
+    function delete_pemesanan($id) {
+        $this->db->delete('pemesanan', array('id' => $id));
+    }
+    
+    function delete_penerimaan($id) {
+        $this->db->delete('penerimaan', array('id' => $id));
+    }
+    
+    function delete_barang($id) {
+        $this->db->delete('barang', array('id' => $id));
+    }
+    
     function save_pemesanan() {
         $this->db->trans_begin();
         $id             = $_POST['no_sp'];
@@ -5714,6 +5726,9 @@ class M_inventory extends CI_Model {
         }
         if (isset($search['key']) and $search['key'] !== '') {
             $q.=" and p.faktur like ('%".$search['key']."%')";
+        }
+        if (isset($search['faktur']) and $search['faktur'] !== '') {
+            $q.=" and p.faktur = '".$search['faktur']."'";
         }
         if (isset($search['awal'])) {
             $q.=" and p.tanggal between '".$search['awal']."' and '".$search['akhir']."'";

@@ -339,7 +339,7 @@ function delete_pemesanan(id, page) {
             "OK": function() {
                 
                 $.ajax({
-                    url: 'models/update-transaksi.php?method=delete_pemesanan&id='+id,
+                    url: '<?= base_url('inventory/manage_pemesanan/delete/') ?>?id='+id,
                     cache: false,
                     success: function() {
                         load_data_pemesanan(page);

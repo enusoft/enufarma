@@ -10,6 +10,8 @@
     		<th width="20%">#</th>
     	</thead>
 
+        
+        
     	<tbody>
     		<?php if (count($inap) == 0) : ?>
 	        <?php for ($i = 1; $i <= 2; $i++) : ?>
