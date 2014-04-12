@@ -48,10 +48,10 @@ var str = '<div id=form_add>'+
             "Simpan": function() {
                 $('#save_barang').submit();
             }, "Cancel": function() {
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }
         }, close: function() {
-            $(this).dialog('close').remove();
+            $(this).dialog().remove();
         }
     });
     $('#tgl_lahir').datepicker({
@@ -165,7 +165,7 @@ function removeMe(el) {
         modal: true,
         buttons: {
             "OK": function() {
-                $('#alert').dialog('close').remove();
+                $('#alert').dialog().remove();
                 var parent = el.parentNode.parentNode;
                 parent.parentNode.removeChild(parent);
                 var jumlah = $('.tr_rows').length;
@@ -187,7 +187,7 @@ function removeMe(el) {
                 hitung_total_penjualan();
                 },
             "Batal": function() {
-                $('#alert').dialog('close').remove();
+                $('#alert').dialog().remove();
             }
         }
     });
@@ -612,7 +612,7 @@ function form_add_penjualan_non_resep() {
                 $.cookie('session', 'false');
             }
         }, close: function() {
-            $(this).dialog('close').remove();
+            $(this).dialog().remove();
             $.cookie('session', 'false');
         }, open: function() {
             $('#barang').focus();
@@ -737,12 +737,12 @@ function delete_penjualannr(id, page) {
                     cache: false,
                     success: function() {
                         load_data_penjualannr(page);
-                        $('#alert').dialog('close').remove();
+                        $('#alert').dialog().remove();
                     }
                 });
             },
             "Cancel": function() {
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }
         }
     });

@@ -174,9 +174,9 @@ function delete_setting_harga(i) {
             "OK": function() {
                 $('tr#mother'+i).remove();
                 $('tr.child'+i).remove();
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }, "Cancel": function() {
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }
         }
     });
@@ -190,11 +190,11 @@ function removeMe(el) {
         title: 'Information Alert',
         buttons: {
             "OK": function() {
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
                 var parent = el.parentNode.parentNode.parentNode.parentNode;
                 parent.parentNode.removeChild(parent);
             }, "Cancel": function() {
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }
         }
     });
@@ -392,7 +392,7 @@ var str = '<div id=form_add>'+
                 $(this).dialog().remove();
             }
         }, close: function() {
-            $(this).dialog('close').remove();
+            $(this).dialog().remove();
         }, open: function() {
             var jml = $('.mother').length;
             kemasan_add(jml);
@@ -445,7 +445,7 @@ var str = '<div id=form_add>'+
                         load_data_barang('1','',data.id_barang);
                     } else {
                         alert_edit();
-                        $('#form_add').dialog('close').remove();
+                        $('#form_add').dialog().remove();
                         var page = $('.noblock').html();
                         load_data_barang(page,$('#search').val());
                     }
@@ -604,12 +604,12 @@ function delete_barang(id, page) {
                     cache: false,
                     success: function() {
                         load_data_barang(page);
-                        $('#alert').dialog('close').remove();
+                        $('#alert').dialog().remove();
                     }
                 });
             },
             "Cancel": function() {
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }
         }
     });

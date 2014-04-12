@@ -34,7 +34,7 @@
                     resizable : false,
                     buttons: [ 
                         { text: "Ok", click: function() { 
-                                $( this ).dialog('close').remove(); 
+                                $( this ).dialog().remove(); 
                             } 
                         }
                     ]

@@ -163,10 +163,10 @@ function form_add() {
                 $('#save_stokopname').submit();
             }, 
             "Cancel": function() {    
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }
         }, close: function() {
-            $(this).dialog('close').remove();
+            $(this).dialog().remove();
         }, open: function() {
             $('#alasan').focus();
         }
@@ -282,12 +282,12 @@ function delete_stokopname(id, page) {
                     cache: false,
                     success: function() {
                         load_data_stokopname(page);
-                        $('#alert').dialog('close').remove();
+                        $('#alert').dialog().remove();
                     }
                 });
             },
             "Cancel": function() {
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }
         }
     });

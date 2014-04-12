@@ -73,7 +73,7 @@ function eliminate(el) {
         modal: true,
         buttons: {
             "OK": function() {
-                $('#alert').dialog('close').remove();
+                $('#alert').dialog().remove();
                 var parent = el.parentNode.parentNode.parentNode.parentNode;
                 parent.parentNode.removeChild(parent);
                 var jumlah = $('.tr_row').length-1;
@@ -91,7 +91,7 @@ function eliminate(el) {
                 }
             },
             "Cancel": function() {
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }
         }
     });
@@ -191,7 +191,7 @@ $('<div id=alert>Anda yakin akan menghapus data ini?</div>').dialog({
         modal: true,
         buttons: {
             "OK": function() {
-                $('#alert').dialog('close').remove();
+                $('#alert').dialog().remove();
                 var parent = el.parentNode.parentNode;
                 parent.parentNode.removeChild(parent);
                 var jumlah = $('.tr_rows').length;
@@ -312,10 +312,10 @@ var str = '<div id=form_add>'+
             "Simpan": function() {
                 $('#save_barang').submit();
             }, "Cancel": function() {
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }
         }, close: function() {
-            $(this).dialog('close').remove();
+            $(this).dialog().remove();
         }
     });
     $('#tgl_lahir').datepicker({
@@ -380,10 +380,10 @@ var str = '<div id=form_add_dokter>'+
             "Simpan": function() {
                 $('#save_dokter').submit();
             }, "Cancel": function() {
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }
         }, close: function() {
-            $(this).dialog('close').remove();
+            $(this).dialog().remove();
         }
     });
     $('#tglmulai').datepicker({
@@ -660,11 +660,11 @@ function form_receipt() {
                 $('#resep_save').submit();
             }, 
             "Cancel": function() {    
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
                 $.cookie('session', 'false');
             }
         }, close: function() {
-            $(this).dialog('close').remove();
+            $(this).dialog().remove();
             $.cookie('session', 'false');
         }, open: function() {
             $.ajax({
@@ -886,11 +886,11 @@ function form_penjualan_resep(id_resep) {
                 form_pembayaran();
             }, 
             "Cancel": function() {    
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
                 $.cookie('session', 'false');
             }
         }, close: function() {
-            $(this).dialog('close').remove();
+            $(this).dialog().remove();
             $.cookie('session', 'false');
         }, open: function() {
             $('#noresep').focus();
@@ -959,7 +959,7 @@ function form_penjualan_resep(id_resep) {
                     $('#total-penjualan').html('0');
                     $('#biaya-apt').html('0');
                     $('#newrow,.adding').remove();
-                    $('#form_penjualan').dialog('close').remove();
+                    $('#form_penjualan').dialog().remove();
                     //location.reload();
                     cetak_struk(data.id);
                     alert_refresh('Data penjualan berhasil disimpan!');
@@ -1050,7 +1050,7 @@ function removeMe(el) {
         modal: true,
         buttons: {
             "OK": function() {
-                $('#alert').dialog('close').remove();
+                $('#alert').dialog().remove();
                 var parent = el.parentNode.parentNode;
                 parent.parentNode.removeChild(parent);
                 var jumlah = $('.tr_rows').length;
@@ -1171,12 +1171,12 @@ function delete_resep(id, page) {
                     cache: false,
                     success: function() {
                         load_data_resep(page);
-                        $('#alert').dialog('close').remove();
+                        $('#alert').dialog().remove();
                     }
                 });
             },
             "Cancel": function() {
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }
         }
     });

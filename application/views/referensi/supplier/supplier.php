@@ -33,10 +33,10 @@ var str = '<div id=form_add>'+
             "Simpan": function() {
                 $('#save_barang').submit();
             }, "Cancel": function() {
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }
         }, close: function() {
-            $(this).dialog('close').remove();
+            $(this).dialog().remove();
         }
     });
     
@@ -61,7 +61,7 @@ var str = '<div id=form_add>'+
                         load_data_supplier('1','',data.id_supplier);
                     } else {
                         alert_edit();
-                        $('#form_add').dialog('close').remove();
+                        $('#form_add').dialog().remove();
                         load_data_supplier('1','',data.id_supplier);
                     }
                     
@@ -130,12 +130,12 @@ function delete_supplier(id, page) {
                     cache: false,
                     success: function() {
                         load_data_supplier(page);
-                        $('#alert').dialog('close').remove();
+                        $('#alert').dialog().remove();
                     }
                 });
             },
             "Cancel": function() {
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }
         }
     });

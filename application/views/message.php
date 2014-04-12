@@ -143,6 +143,19 @@ function alert_dinamic(variable, focus) {
     });
 }
 
+function alert_problem(variable, focus) {
+    $( "<div title='Alert: Warning'>"+variable+"</div>" ).dialog({
+        autoOpen: true,
+        modal: true,
+        buttons: {
+          "Refresh Page": function() {
+            $( this ).dialog( "close" );
+            location.reload();
+          }
+        }
+    });
+}
+
 function alert_refresh(content) {
     $( "<div>"+content+"</div>" ).dialog({
         modal: true,

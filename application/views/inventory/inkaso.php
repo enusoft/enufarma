@@ -87,11 +87,11 @@
                         $('#save_inkaso').submit();
                     },
                     "Cancel": function() {
-                          $(this).dialog('close').remove();
+                          $(this).dialog().remove();
                     }
                 },
                 close: function() {
-                      $(this).dialog('close').remove();
+                      $(this).dialog().remove();
                 },
                 open: function() {
                     $.ajax({
@@ -166,12 +166,12 @@
                         cache: false,
                         success: function() {
                             load_data_inkaso(page);
-                            $('#alert').dialog('close').remove();
+                            $('#alert').dialog().remove();
                         }
                     });
                 },
                 "Cancel": function() {
-                    $(this).dialog('close').remove();
+                    $(this).dialog().remove();
                 }
             }
         });

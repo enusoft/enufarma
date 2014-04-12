@@ -37,10 +37,10 @@ function get_data_no_distribusi() {
             "Simpan": function() {
                 $('#save_barang').submit();
             }, "Cancel": function() {
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }
         }, close: function() {
-            $(this).dialog('close').remove();
+            $(this).dialog().remove();
         }
     });
     $.getJSON('<?= base_url('autocomplete/nomor_distribusi') ?>', function(data) {
@@ -58,7 +58,7 @@ function get_data_no_distribusi() {
 }
 
 function select_this(id) {
-    $('#list-no-distribusi').dialog('close').remove();
+    $('#list-no-distribusi').dialog().remove();
     $('#no_dist').val(id);
     $.getJSON('<?= base_url('inventory/load_data_distribusi') ?>/'+id, function(data) {
         $('#pesanan-list tbody').html('');
@@ -140,11 +140,11 @@ function form_add_penerimaan_dist() {
                 $('#save_penerimaan_distribusi').submit();
             }, 
             "Cancel": function() {    
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
                 $.cookie('session', 'false');
             }
         }, close: function() {
-            $(this).dialog('close').remove();
+            $(this).dialog().remove();
             $.cookie('session', 'false');
         }, open: function() {
             $('#no_dist').focus();
@@ -179,13 +179,13 @@ function form_add_penerimaan_dist() {
                             if (data !== '') {
                                 custom_message('Informasi','Data penerimaan_distribusi berhasil di tambahkan !');
                                 load_data_penerimaan_distribusi(1,'',data);
-                                $('#alert').dialog('close').remove();
+                                $('#alert').dialog().remove();
                             }
                         }
                     });
                     },
                 "Cancel": function() {
-                    $(this).dialog('close').remove();
+                    $(this).dialog().remove();
                 }
             }
         });
@@ -238,12 +238,12 @@ function delete_penerimaan_distribusi(id, page) {
                     cache: false,
                     success: function() {
                         load_data_penerimaan_distribusi(page);
-                        $('#alert').dialog('close').remove();
+                        $('#alert').dialog().remove();
                     }
                 });
             },
             "Cancel": function() {
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }
         }
     });

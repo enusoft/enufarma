@@ -33,10 +33,10 @@ var str = '<div id=form_add>'+
             "Simpan": function() {
                 $('#save_barang').submit();
             }, "Cancel": function() {
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }
         }, close: function() {
-            $(this).dialog('close').remove();
+            $(this).dialog().remove();
         }
     });
     
@@ -61,7 +61,7 @@ var str = '<div id=form_add>'+
                         load_data_pabrik('1','',data.id_pabrik);
                     } else {
                         alert_edit();
-                        $('#form_add').dialog('close').remove();
+                        $('#form_add').dialog().remove();
                         load_data_pabrik('1','',data.id_pabrik);
                     }
                     
@@ -130,12 +130,12 @@ function delete_pabrik(id, page) {
                     cache: false,
                     success: function() {
                         load_data_pabrik(page);
-                        $('#alert').dialog('close').remove();
+                        $('#alert').dialog().remove();
                     }
                 });
             },
             "Cancel": function() {
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }
         }
     });

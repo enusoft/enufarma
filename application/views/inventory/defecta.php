@@ -201,11 +201,11 @@ function form_add_defecta() {
                 $('#save_defecta').submit();
             }, 
             "Cancel": function() {    
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
                 $.cookie('session', 'false');
             }
         }, close: function() {
-            $(this).dialog('close').remove();
+            $(this).dialog().remove();
             $.cookie('session', 'false');
         }, open: function() {
             $('#supplier').focus();
@@ -302,12 +302,12 @@ $('<div id=alert>Anda yakin akan memasukkan barang '+nama+' ke rencana pemesanan
                 dataType: 'json',
                 success: function() {
                     load_data_defecta(page);
-                    $('#alert').dialog('close').remove();
+                    $('#alert').dialog().remove();
                 }
             });
         },
         "Cancel": function() {
-            $(this).dialog('close').remove();
+            $(this).dialog().remove();
         }
     }
 });

@@ -19,7 +19,7 @@ function removeMe(el) {
         modal: true,
         buttons: {
             "OK": function() {
-                $('#alert').dialog('close').remove();
+                $('#alert').dialog().remove();
                 var parent = el.parentNode.parentNode;
                 parent.parentNode.removeChild(parent);
                 var jumlah = $('.tr_rows').length;
@@ -233,11 +233,11 @@ function form_add() {
                 $('#save_distribusi').submit();
             }, 
             "Cancel": function() {    
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
                 $.cookie('session', 'false');
             }
         }, close: function() {
-            $(this).dialog('close').remove();
+            $(this).dialog().remove();
             $.cookie('session', 'false');
         }, open: function() {
             $('#unit').focus();
@@ -283,7 +283,7 @@ function form_add() {
                     });
                     },
                 "Cancel": function() {
-                    $(this).dialog('close').remove();
+                    $(this).dialog().remove();
                 }
             }
         });
@@ -336,12 +336,12 @@ function delete_distribusi(id, page) {
                     cache: false,
                     success: function() {
                         load_data_distribusi(page);
-                        $('#alert').dialog('close').remove();
+                        $('#alert').dialog().remove();
                     }
                 });
             },
             "Cancel": function() {
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }
         }
     });

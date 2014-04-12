@@ -164,7 +164,7 @@ function dialog_rekening() {
         width: 400,
         modal: true,
         close: function() {
-            $(this).dialog('close').remove(); 
+            $(this).dialog().remove(); 
         },
         open: function() {
             $('#nama_rekeningx').focus();
@@ -172,10 +172,10 @@ function dialog_rekening() {
         buttons: {
             "Simpan": function() { 
                 save_rekening();
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             },
             "Batal": function() { 
-                $(this).dialog('close').remove(); 
+                $(this).dialog().remove(); 
             }
         } 
     });
@@ -201,7 +201,7 @@ function save_rekening() {
         type: 'POST',
         data: $('#form_rekening').serialize(),
         success: function(data) {
-            $('#dialogx').dialog('close').remove(); 
+            $('#dialogx').dialog().remove(); 
             if ($('#kode_rek_id').val() == '') {
                 alert_tambah();
             } else {
@@ -240,7 +240,7 @@ function dialog_subrekening(id_rek) {
         width: 400,
         modal: true,
         close: function() {
-            $(this).dialog('close').remove(); 
+            $(this).dialog().remove(); 
         },
         open: function() {
             $('#nama_sub').focus();
@@ -248,10 +248,10 @@ function dialog_subrekening(id_rek) {
         buttons: {
             "Simpan": function() { 
                 save_subrekening();
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             },
             "Batal": function() { 
-                $(this).dialog('close').remove(); 
+                $(this).dialog().remove(); 
             }
         } 
     });
@@ -282,7 +282,7 @@ function save_subrekening() {
         type: 'POST',
         data: $('#form_subrekening').serialize(),
         success: function(data) {
-            $('#dialogy').dialog('close').remove(); 
+            $('#dialogy').dialog().remove(); 
             if ($('#kode_sub_rek_id').val() == '') {
                 alert_tambah();
             } else {
@@ -345,13 +345,13 @@ function dialog_sub_sub_rekening(id_sub_rekening) {
         buttons: {
             "Simpan": function() {
                 save_sub_sub();
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }, 
             "Batal": function() {
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }
         }, close: function() {
-            $(this).dialog('close').remove();
+            $(this).dialog().remove();
         }
     });
 
@@ -369,7 +369,7 @@ function save_sub_sub() {
         type: 'POST',
         data: $('#form_subsubrekening').serialize(),
         success: function(data) {
-            $('#dialogz').dialog('close').remove(); 
+            $('#dialogz').dialog().remove(); 
             if (id === '') {
                 alert_tambah();
             } else {
@@ -433,14 +433,14 @@ function dialog_sub_sub_sub_rekening(id_sub_sub) {
         buttons: {
             "Simpan": function() {
                 save_sub_sub_sub();
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }, 
             "Batal": function() {
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }
         },
         close: function() {
-            $(this).dialog('close').remove();
+            $(this).dialog().remove();
         }
     });
 }
@@ -457,7 +457,7 @@ function save_sub_sub_sub() {
         type: 'POST',
         data: $('#form_sub_sub_sub').serialize(),
         success: function(data) {
-            $('#dialogq').dialog('close').remove(); 
+            $('#dialogq').dialog().remove(); 
             if (id === '') {
                 alert_tambah();
             } else {
@@ -475,7 +475,7 @@ function delete_ssss(el, id) {
         modal: true,
         buttons: {
             "OK": function() {
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
                 var parent = el.parentNode.parentNode;
                 parent.parentNode.removeChild(parent);
                 $.ajax({
@@ -487,7 +487,7 @@ function delete_ssss(el, id) {
                 });
             },
             "Batal": function() {
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }
         }
     });
@@ -500,7 +500,7 @@ function delete_sss(el, id) {
         modal: true,
         buttons: {
             "OK": function() {
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
 //                var parent = el.parentNode.parentNode;
 //                parent.parentNode.removeChild(parent);
                 $.ajax({
@@ -516,7 +516,7 @@ function delete_sss(el, id) {
                 });
             },
             "Batal": function() {
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }
         }
     });

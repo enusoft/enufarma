@@ -16,7 +16,7 @@
                         $('#form').submit();
                     },
                     "Cancel": function() {
-                        $(this).dialog('close').remove();
+                        $(this).dialog().remove();
                     }
                 }
             });

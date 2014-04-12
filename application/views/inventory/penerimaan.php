@@ -194,10 +194,10 @@ var str = '<div id=form_add_barang>'+
                 $('#form_barang').submit();
             }, 
             "Cancel": function() {    
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }
         }, close: function() {
-            $(this).dialog('close').remove();
+            $(this).dialog().remove();
         }, open: function() {
             var jml = $('.mother').length;
             kemasan_add(jml);
@@ -249,7 +249,7 @@ var str = '<div id=form_add_barang>'+
                         //load_data_barang('1','',data.id_barang);
                     } else {
                         alert_edit();
-                        $('#form_add_barang').dialog('close').remove();
+                        $('#form_add_barang').dialog().remove();
                         var page = $('.noblock').html();
                         $('#form_add_barang').dialog('close');
                         //load_data_barang(page,$('#search').val());
@@ -421,9 +421,9 @@ function delete_setting_harga(i) {
             "OK": function() {
                 $('tr#mother'+i).remove();
                 $('tr.child'+i).remove();
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }, "Cancel": function() {
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }
         }
     });
@@ -438,7 +438,7 @@ function removeMe(el) {
         modal: true,
         buttons: {
             "OK": function() {
-                $('#alert').dialog('close').remove();
+                $('#alert').dialog().remove();
                 var parent = el.parentNode.parentNode;
                 parent.parentNode.removeChild(parent);
                 var jumlah = $('.tr_rows').length;
@@ -492,17 +492,17 @@ function check_hna() {
                     "Ya": function() {
                         $('#hna'+i).val(new_hna);
                         
-                        $(this).dialog('close').remove();
+                        $(this).dialog().remove();
                         $('#diskon_pr'+i).focus().select();
                     },
                     "Tidak": function() {
                         $('#hna'+i).val(hna);
-                        $(this).dialog('close').remove();
+                        $(this).dialog().remove();
                         $('#diskon_pr'+i).focus().select();
                     }
                 }, close: function() {
                     $('#hna'+i).val(hna);
-                    $(this).dialog('close').remove();
+                    $(this).dialog().remove();
                     $('#diskon_pr'+i).focus().select();
                 }
             });
@@ -535,17 +535,17 @@ function check_perubahan_hna(i) {
                     "Ya": function() {
                         $('#hna'+i).val(new_hna);
                         
-                        $(this).dialog('close').remove();
+                        $(this).dialog().remove();
                         $('#diskon_pr'+i).focus().select();
                     },
                     "Tidak": function() {
                         $('#hna'+i).val(hna);
-                        $(this).dialog('close').remove();
+                        $(this).dialog().remove();
                         $('#diskon_pr'+i).focus().select();
                     }
                 }, close: function() {
                     $('#hna'+i).val(hna);
-                    $(this).dialog('close').remove();
+                    $(this).dialog().remove();
                     $('#diskon_pr'+i).focus().select();
                 }
             });
@@ -683,10 +683,10 @@ var str = '<div id=form_add>'+
             "Simpan": function() {
                 $('#save_barang').submit();
             }, "Cancel": function() {
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }
         }, close: function() {
-            $(this).dialog('close').remove();
+            $(this).dialog().remove();
         }
     });
     $('#save_barang').submit(function() {
@@ -920,14 +920,14 @@ function form_add() {
                 $('#save_penerimaan').submit();
             }, 
             "Cancel": function() {    
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
                 $.cookie('session', 'false');
             }, "Reset": function() {
                 $('#no_sp, #supplier, #id_suppplier, #tempo, #total').val('');
                 $('#penerimaan-list tbody').html('');
             }
         }, close: function() {
-            $(this).dialog('close').remove();
+            $(this).dialog().remove();
             $.cookie('session', 'false');
         }, open: function() {
             $('#no_sp').focus();
@@ -1042,7 +1042,7 @@ function form_add() {
                         data: $('#save_penerimaan').serialize(),
                         cache: false,
                         success: function(data) {
-                            $('#alert').dialog('close').remove();
+                            $('#alert').dialog().remove();
                             if (data.status === true) {
                                 if (data.action === 'add') {
                                     alert_refresh('Data berhasil disimpan');
@@ -1056,7 +1056,7 @@ function form_add() {
                     });
                     },
                 "Cancel": function() {
-                    $(this).dialog('close').remove();
+                    $(this).dialog().remove();
                 }
             }
         });
@@ -1114,12 +1114,12 @@ function delete_penerimaan(id, page) {
                     cache: false,
                     success: function() {
                         load_data_penerimaan(page);
-                        $('#alert').dialog('close').remove();
+                        $('#alert').dialog().remove();
                     }
                 });
             },
             "Cancel": function() {
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }
         }
     });

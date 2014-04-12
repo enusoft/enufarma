@@ -22,7 +22,7 @@ function form_cari_resep() {
         },
         close: function() {
             $('#pasien').focus();
-            $(this).dialog('close').remove();
+            $(this).dialog().remove();
         }
     });
     $('#awal, #akhir').datepicker({

@@ -51,10 +51,10 @@ var str = '<div id=form_add_rencana_pemesanan>'+
             "Simpan": function() {
                 $('#save_barang').submit();
             }, "Cancel": function() {
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }
         }, close: function() {
-            $(this).dialog('close').remove();
+            $(this).dialog().remove();
         }
     });    
     
@@ -313,7 +313,7 @@ function form_add_rencana_pemesanan() {
                 $.cookie('session', 'false');
             }
         }, close: function() {
-            $(this).dialog('close').remove();
+            $(this).dialog().remove();
             $.cookie('session', 'false');
         }, open: function() {
             $('#supplier').focus();
@@ -402,7 +402,7 @@ function delete_pemesanan_plant(id, page) {
                 });
             },
             "Cancel": function() {
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }
         }
     });

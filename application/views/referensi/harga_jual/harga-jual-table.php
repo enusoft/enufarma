@@ -95,7 +95,7 @@ $(function() {
                         width: 700,
                         height: 400,
                         close: function() {
-                            $('#result_load').dialog('close').remove();
+                            $('#result_load').dialog().remove();
                             var id_pb= $('#pb').val();
                             $.ajax({
                                 url: '<?= base_url('referensi/harga_jual_load') ?>',

@@ -231,7 +231,7 @@ function create_win_set_awal() {
             },
             close: function() {
                 $('#tanggal').remove();
-                $('#opennewwind_set').dialog('close').remove();
+                $('#opennewwind_set').dialog().remove();
             },
             buttons: {
                 "Simpan": function() {
@@ -245,11 +245,11 @@ function create_win_set_awal() {
                             if (data.status === true) {
                                 if ($("#id_jurnal").val() === '') {
                                     alert_tambah();
-                                    $('#opennewwind_set').dialog('close').remove();
+                                    $('#opennewwind_set').dialog().remove();
                                     get_list_data('undefined', 1);
                                 } else {
                                     alert_edit();
-                                    $('#opennewwind_set').dialog('close').remove();
+                                    $('#opennewwind_set').dialog().remove();
                                     get_list_data('undefined', 1, data.id);
                                 }
                             }
@@ -261,7 +261,7 @@ function create_win_set_awal() {
                 },
                 "Batal": function() {
                     $('#tanggal').remove();
-                    $('#opennewwind_set').dialog('close').remove();
+                    $('#opennewwind_set').dialog().remove();
                 }
             }
         });
@@ -367,7 +367,7 @@ function create_win_jurnal() {
         },
         close: function() {
             $('#tanggal').remove();
-            $(this).dialog('close').remove();
+            $(this).dialog().remove();
         },
         buttons: {
             "Simpan": function() {
@@ -411,7 +411,7 @@ function create_win_jurnal() {
             success: function() {
                alert_tambah();
                get_list_data(true, 2);
-               $('#opennewwind').dialog('close').remove();
+               $('#opennewwind').dialog().remove();
             }
         });
         return false;

@@ -83,7 +83,7 @@ function removeMe(el) {
         modal: true,
         buttons: {
             "OK": function() {
-                $('#alert').dialog('close').remove();
+                $('#alert').dialog().remove();
                 var parent = el.parentNode.parentNode;
                 parent.parentNode.removeChild(parent);
                 var jumlah = $('.tr_rows').length;
@@ -312,7 +312,7 @@ function form_pembayaran() {
             buttons: {
                 "Simpan": function() {
                     $('#save_penjualan').submit();
-                    $('#form-pembayaran').dialog('close').remove();
+                    $('#form-pembayaran').dialog().remove();
                     $('.adding').remove();
                 }
             },
@@ -336,7 +336,7 @@ function form_pembayaran() {
                 }
             }
             ,close: function() {
-                $('#form-pembayaran').dialog('close').remove();
+                $('#form-pembayaran').dialog().remove();
                 $.cookie('formbayar', 'false');
             }
       });
@@ -556,11 +556,11 @@ function form_add() {
                 form_pembayaran();
             }, 
             "Cancel": function() {    
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
                 $.cookie('session', 'false');
             }
         }, close: function() {
-            $(this).dialog('close').remove();
+            $(this).dialog().remove();
             $.cookie('session', 'false');
         }, open: function() {
             $('#noresep').focus();
@@ -599,7 +599,7 @@ function form_add() {
                     $('#total-penjualan').html('0');
                     $('#biaya-apt').html('0');
                     $('#newrow,.adding').remove();
-                    $('#form_penjualan').dialog('close').remove();
+                    $('#form_penjualan').dialog().remove();
                     //location.reload();
                     cetak_struk(data.id);
                     alert_refresh('Data penjualan berhasil disimpan!');
@@ -683,12 +683,12 @@ function delete_penjualan(id, page) {
                     cache: false,
                     success: function() {
                         load_data_penjualan(page);
-                        $('#alert').dialog('close').remove();
+                        $('#alert').dialog().remove();
                     }
                 });
             },
             "Cancel": function() {
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }
         }
     });

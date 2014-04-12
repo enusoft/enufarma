@@ -51,7 +51,7 @@ $(function() {
                         cache: false,
                         dataType: 'json',
                         success: function(data) {
-                            $('#alert_delete').dialog('close').remove();
+                            $('#alert_delete').dialog().remove();
                             if (data === true) {
                                 alert_delete();
                                 $('#loaddata').load('<?= base_url('laporan/resep') ?>');
@@ -62,11 +62,11 @@ $(function() {
                     });
                 },
                 "Cancel": function() {
-                    $('#alert_delete').dialog('close').remove();
+                    $('#alert_delete').dialog().remove();
                 }
             },
             close: function() {
-                $('#alert_delete').dialog('close').remove();
+                $('#alert_delete').dialog().remove();
             }
         });
     });

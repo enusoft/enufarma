@@ -440,10 +440,10 @@ $(function() {
     $('#retur').button({icons: {secondary: 'ui-icon-transfer-e-w'}}).click(function() {
         var id = $('#id_penjualan').html();
         $.get('<?= base_url('inventory/retur_penjualan') ?>/'+id+'?_'+Math.random(), function(data) {
-            $("#result_detail").dialog('close').remove();
+            $("#result_detail").dialog().remove();
             $('#loaddata').html(data);
         });
-        $("#result_detail").dialog('close').remove();
+        $("#result_detail").dialog().remove();
     });
     $('#bayar').focus(function() {
         var jumlah = $('.tr_row').length;

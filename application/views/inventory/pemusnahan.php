@@ -47,10 +47,10 @@ var str = '<div id=form_add_karyawan>'+
             "Simpan": function() {
                 $('#save_barang').submit();
             }, "Cancel": function() {
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }
         }, close: function() {
-            $(this).dialog('close').remove();
+            $(this).dialog().remove();
         }
     });
     $('#tgl_lahir').datepicker({
@@ -294,11 +294,11 @@ function form_add() {
                 $('#save_pemusnahan').submit();
             }, 
             "Cancel": function() {    
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
                 $.cookie('session', 'false');
             }
         }, close: function() {
-            $(this).dialog('close').remove();
+            $(this).dialog().remove();
             $.cookie('session', 'false');
         }, open: function() {
             $('#apoteker').focus();
@@ -384,12 +384,12 @@ function delete_pemusnahan(id, page) {
                     cache: false,
                     success: function() {
                         load_data_pemusnahan(page);
-                        $('#alert').dialog('close').remove();
+                        $('#alert').dialog().remove();
                     }
                 });
             },
             "Cancel": function() {
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }
         }
     });

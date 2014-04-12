@@ -30,7 +30,7 @@ $(function() {
                 }
             });
             $('#forminforesep').submit();
-            $(this).closest("#result_detail").dialog('close').remove();
+            $(this).closest("#result_detail").dialog().remove();
         }
     });
 })

@@ -11,7 +11,7 @@ class User extends CI_Controller {
         $this->load->model('configuration');
         $this->load->helper('login');
         $this->load->model('m_rawatinap');
-        $user = $this->session->userdata('user');
+        $user = $this->session->userdata('id_user');
 
         if ($user != '') {
             $data = $this->menu_user_load_data();

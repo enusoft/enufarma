@@ -98,10 +98,10 @@ function form_add() {
                 $('#save_retur_penerimaan').submit();
             }, 
             "Cancel": function() {    
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }
         }, close: function() {
-            $(this).dialog('close').remove();
+            $(this).dialog().remove();
         }, open: function() {
             $('#supplier').focus();
         }
@@ -281,12 +281,12 @@ function delete_retur_penerimaan(id, page) {
                     dataType: 'json',
                     success: function() {
                         load_data_retur_penerimaan(page);
-                        $('#alert').dialog('close').remove();
+                        $('#alert').dialog().remove();
                     }
                 });
             },
             "Cancel": function() {
-                $(this).dialog('close').remove();
+                $(this).dialog().remove();
             }
         }
     });

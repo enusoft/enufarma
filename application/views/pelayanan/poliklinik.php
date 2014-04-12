@@ -1000,7 +1000,7 @@
                         print_informed_consent($('input[name=ic]:checked').val(),$('input[name=id_pelayanan_kunjungan]').val(),id_tindakan,baris);
                     },
                     "Batal": function() {
-                        $(this).dialog('close').remove();
+                        $(this).dialog().remove();
                     }
                 }
             });

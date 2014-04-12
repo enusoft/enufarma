@@ -75,7 +75,7 @@
                     var status = jqxhr.statusText;
                     var menu = $.cookie('url').trim();
 
-                    alert_dinamic('Problem internal server, please contact your system administrator!');
+                    alert_problem('Problem internal server, please contact your system administrator!');
                         
                     $.ajax({
                         type : 'POST',
